@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Academ-IT-School.iml" filepath="$PROJECT_DIR$/Academ-IT-School.iml" />
       <module fileurl="file://$PROJECT_DIR$/Blurring/Blurring.iml" filepath="$PROJECT_DIR$/Blurring/Blurring.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Csv/Csv.iml" filepath="$PROJECT_DIR$/Csv/Csv.iml" />
     </modules>
   </component>
 </project>
