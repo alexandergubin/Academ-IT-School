@@ -43,16 +43,11 @@ public class ArrayListHome {
     }
 
     private static ArrayList<Integer> deleteRepeats(ArrayList<Integer> arrayList) {
-        ArrayList<Integer> result = new ArrayList<>(arrayList);
-        int i = 0;
-        while (i < result.size()) {
-            int tmp = result.get(i);
-            for (int j = result.size() - 1; j > i; j--) {
-                if (result.get(j) == tmp) {
-                    result.remove(j);
-                }
+        ArrayList<Integer> result = new ArrayList<>();
+        for (Integer e : arrayList) {
+            if (!result.contains(e)) {
+                result.add(e);
             }
-            i++;
         }
         return result;
     }
