@@ -46,9 +46,12 @@ public class SinglyLinkedList<T> {
     }
 
     public T remove(int index) {
+        if (index == 0){
+            return removeFirst();
+        }
         ListItem<T> p = head;
-        for (int i = 0; i < index; i++) {
-            p.setNext(p.getNext());
+        for (int i = 0; i < index-1; i++) {
+            p = p.getNext();
         }
         T result = p.getNext().getData();
         p.setNext(p.getNext().getNext());
@@ -61,7 +64,6 @@ public class SinglyLinkedList<T> {
         for (ListItem<T> p = head; p != null; p = p.getNext()) {
             if (p.getData().equals(data)) {
                 remove(i);
-                size--;
                 return true;
             }
             i++;

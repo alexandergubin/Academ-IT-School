@@ -24,5 +24,9 @@ public class Test {
         System.out.println("remove first element");
         myList.removeFirst();
         System.out.println(myList.toString());
+
+        System.out.println("remove element \"2\"");
+        myList.remove((Integer)2);
+        System.out.println(myList.toString());
     }
 }
