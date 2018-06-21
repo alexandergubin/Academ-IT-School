@@ -1,3 +1,5 @@
+package com.gubin.listtask;
+
 public class ListItem<T> {
     private T data;
     private ListItem<T> next;

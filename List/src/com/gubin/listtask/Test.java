@@ -1,3 +1,5 @@
+package com.gubin.listtask;
+
 public class Test {
     public static void main(String[] args) {
         SinglyLinkedList<Integer> myList = new SinglyLinkedList<>();
@@ -6,7 +8,7 @@ public class Test {
         System.out.println("add elements  1,2,3,4:");
         myList.addFirst(3);
         myList.addFirst(1);
-        myList.add(1,2);
+        myList.add(1, 2);
         myList.addLast(4);
         System.out.println(myList.toString());
 
@@ -26,7 +28,11 @@ public class Test {
         System.out.println(myList.toString());
 
         System.out.println("remove element \"2\"");
-        myList.remove((Integer)2);
+        myList.remove((Integer) 2);
+        System.out.println(myList.toString());
+
+        System.out.println("add last \"7\"");
+        myList.addLast(7);
         System.out.println(myList.toString());
     }
 }

@@ -1,3 +1,5 @@
+package com.gubin.arraylisthome;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -6,7 +8,7 @@ import java.util.Scanner;
 
 public class ArrayListHome {
     public static void main(String[] args) {
-        String filePath = ".\\ArrayListHome\\src\\input.txt";
+        String filePath = ".\\com.gubin.arraylisthome.ArrayListHome\\src\\input.txt";
         ArrayList<Integer> arrayList = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
         ArrayList<Integer> arrayList2 = new ArrayList<>(Arrays.asList(1, 2, 1, 5, 6, 5, 3, 2, 6, 1, 5, 3, 2, 6, 5, 1, 3, 2, 6, 5));
 

@@ -1,3 +1,5 @@
+package com.gubin.csv;
+
 import java.io.*;
 import java.util.Scanner;
 
@@ -102,6 +104,7 @@ public class Csv {
             }
 
         } catch (FileNotFoundException e) {
+            System.out.println("file not found");
             e.printStackTrace();
         }
     }
