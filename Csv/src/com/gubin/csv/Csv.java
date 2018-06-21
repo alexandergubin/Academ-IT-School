@@ -104,7 +104,7 @@ public class Csv {
             }
 
         } catch (FileNotFoundException e) {
-            System.out.println("file not found");
+            System.out.println("File not found. Your file path =\"" + csvFilePath+"\"");
             e.printStackTrace();
         }
     }
