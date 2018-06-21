@@ -46,11 +46,11 @@ public class SinglyLinkedList<T> {
     }
 
     public T remove(int index) {
-        if (index == 0){
+        if (index == 0) {
             return removeFirst();
         }
         ListItem<T> p = head;
-        for (int i = 0; i < index-1; i++) {
+        for (int i = 0; i < index - 1; i++) {
             p = p.getNext();
         }
         T result = p.getNext().getData();
@@ -83,7 +83,7 @@ public class SinglyLinkedList<T> {
         if (head != null) {
             p.setNext(head);
             head = p;
-        } else{
+        } else {
             head = p;
             head.setNext(null);
         }
@@ -92,14 +92,14 @@ public class SinglyLinkedList<T> {
 
     public void addLast(T data) {
         ListItem<T> node = new ListItem<>(data);
-        ListItem<T> p=head;
-        for(int i=0; i<size-1;i++){
-            p=p.getNext();
+        ListItem<T> p = head;
+        for (int i = 0; i < size - 1; i++) {
+            p = p.getNext();
         }
-        if (p==null){
+        if (p == null) {
             head = node;
             node.setNext(null);
-        }else {
+        } else {
             p.setNext(node);
             node.setNext(null);
         }
@@ -108,7 +108,7 @@ public class SinglyLinkedList<T> {
 
     public void add(int index, T data) {
         ListItem<T> p = head;
-        for (int i = 0; i < index-1; i++) {
+        for (int i = 0; i < index - 1; i++) {
             p = p.getNext();
         }
         ListItem<T> node = new ListItem<>(data);
