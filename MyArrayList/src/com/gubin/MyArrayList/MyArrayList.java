@@ -1,3 +1,5 @@
+package com.gubin.MyArrayList;
+
 import java.util.*;
 
 public class MyArrayList<T> implements List<T> {
@@ -12,16 +14,12 @@ public class MyArrayList<T> implements List<T> {
     }
 
     public MyArrayList(int capacity) {
-        if (capacity > 0) {
-            this.capacity = capacity;
-            elements = new Object[capacity];
-            size = 0;
-        } else if (capacity == 0) {
-            elements = new Object[]{};
-            size = 0;
-        } else {
-            throw new IllegalArgumentException("размер MyArrayList не может быть отрицвтельным");
+        if (capacity < 0) {
+            throw new IllegalArgumentException("размер MyArrayList не может быть отрицaтельным");
         }
+        this.capacity = capacity;
+        elements = new Object[capacity];
+        size = 0;
     }
 
     private void resizeArray(int newSize) {
@@ -42,17 +40,9 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public boolean contains(Object o) {
-        if (o == null) {
-            for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
-                    return true;
-                }
-            }
-        } else {
-            for (Object e : elements) {
-                if (e.equals(o)) {
-                    return true;
-                }
+        for (Object e : elements) {
+            if (Objects.equals(e, o)) {
+                return true;
             }
         }
         return false;
@@ -249,13 +239,13 @@ public class MyArrayList<T> implements List<T> {
     @Override
     public int lastIndexOf(Object o) {
         if (o == null) {
-            for (int i = size-1; i >=0; i--) {
+            for (int i = size - 1; i >= 0; i--) {
                 if (elements[i] == null) {
                     return i;
                 }
             }
         } else {
-            for (int i = size-1; i >=0; i--) {
+            for (int i = size - 1; i >= 0; i--) {
                 if (elements[i].equals(o)) {
                     return i;
                 }

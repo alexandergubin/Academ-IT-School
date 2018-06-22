@@ -22,6 +22,9 @@ public class SinglyLinkedList<T> {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("некорректное значение index");
         }
+        if (index == 0) {
+            return head;
+        }
         ListItem<T> item = head;
         for (int i = 0; i < index; i++) {
             item = item.getNext();
@@ -56,13 +59,19 @@ public class SinglyLinkedList<T> {
     }
 
     public boolean remove(T data) {
-        int i = 0;
-        for (ListItem<T> p = head; p != null; p = p.getNext()) {
+        if (size == 0) {
+            throw new NullPointerException("список пуст");
+        }
+        if (Objects.equals(head.getData(), data)) {
+            removeFirst();
+            return true;
+        }
+        for (ListItem<T> prev = head, p = head.getNext(); p != null; prev = p, p = p.getNext()) {
             if (Objects.equals(p.getData(), data)) {
-                remove(i);
+                prev.setNext(p.getNext());
+                size--;
                 return true;
             }
-            i++;
         }
         return false;
     }
@@ -103,13 +112,8 @@ public class SinglyLinkedList<T> {
         }
         ListItem<T> p = getElement(index - 1);
         ListItem<T> node = new ListItem<>(data);
-        if (p == null) {
-            head = node;
-            node.setNext(null);
-        } else {
-            node.setNext(p.getNext());
-            p.setNext(node);
-        }
+        node.setNext(p.getNext());
+        p.setNext(node);
         size++;
     }
 
