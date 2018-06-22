@@ -35,10 +35,6 @@ public class SinglyLinkedList<T> {
 
 
     public T setData(int index, T data) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("некорректное значение index");
-        }
-
         ListItem<T> p = getElement(index);
         T tmp = p.getData();
         p.setData(data);

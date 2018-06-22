@@ -6,6 +6,9 @@ public class Test {
         SinglyLinkedList<Integer> myList2;
 
         System.out.println("add elements  1,2,3,4:");
+        System.out.println(myList.toString());
+        myList.addLast(null);
+        System.out.println(myList.toString());
         myList.addFirst(2);
         myList.addFirst(1);
         myList.addLast(3);
