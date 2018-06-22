@@ -16,7 +16,7 @@ public class SinglyLinkedList<T> {
         return head;
     }
 
-    public ListItem<T> getElement(int index) {
+    private ListItem<T> getElement(int index) {
         if (index < 0 || index >= size) {
             throw new IllegalArgumentException("некорректное значение index");
         }
