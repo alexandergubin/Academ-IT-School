@@ -6,10 +6,11 @@ public class Test {
         SinglyLinkedList<Integer> myList2;
 
         System.out.println("add elements  1,2,3,4:");
-        myList.addFirst(3);
+        myList.addFirst(2);
         myList.addFirst(1);
-        myList.add(1, 2);
-        myList.addLast(4);
+        myList.addLast(3);
+        myList.add(0, 4);
+        myList.addLast(null);
         System.out.println(myList.toString());
 
         System.out.println("copy list to myList2");

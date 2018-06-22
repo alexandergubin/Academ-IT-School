@@ -1,5 +1,7 @@
 package com.gubin.listtask;
 
+import java.util.Objects;
+
 public class SinglyLinkedList<T> {
     private ListItem<T> head;
     private int size;
@@ -18,7 +20,7 @@ public class SinglyLinkedList<T> {
 
     private ListItem<T> getElement(int index) {
         if (index < 0 || index >= size) {
-            throw new IllegalArgumentException("некорректное значение index");
+            throw new IndexOutOfBoundsException("некорректное значение index");
         }
         ListItem<T> item = head;
         for (int i = 0; i < index; i++) {
@@ -28,16 +30,13 @@ public class SinglyLinkedList<T> {
     }
 
     public T getData(int index) {
-        if (index < 0 || index >= size) {
-            throw new IllegalArgumentException("некорректное значение index");
-        }
         return this.getElement(index).getData();
     }
 
 
     public T setData(int index, T data) {
         if (index < 0 || index >= size) {
-            throw new IllegalArgumentException("некорректное значение index");
+            throw new IndexOutOfBoundsException("некорректное значение index");
         }
 
         ListItem<T> p = getElement(index);
@@ -48,7 +47,7 @@ public class SinglyLinkedList<T> {
 
     public T remove(int index) {
         if (index < 0 || index >= size) {
-            throw new IllegalArgumentException("некорректное значение index");
+            throw new IndexOutOfBoundsException("некорректное значение index");
         }
         if (index == 0) {
             return removeFirst();
@@ -62,22 +61,12 @@ public class SinglyLinkedList<T> {
 
     public boolean remove(T data) {
         int i = 0;
-        if (data == null) {
-            for (ListItem<T> p = head; p != null; p = p.getNext()) {
-                if (p.getData() == null) {
-                    remove(i);
-                    return true;
-                }
-                i++;
+        for (ListItem<T> p = head; p != null; p = p.getNext()) {
+            if (Objects.equals(p.getData(), data)) {
+                remove(i);
+                return true;
             }
-        } else {
-            for (ListItem<T> p = head; p != null; p = p.getNext()) {
-                if (p.getData().equals(data)) {
-                    remove(i);
-                    return true;
-                }
-                i++;
-            }
+            i++;
         }
         return false;
     }
@@ -110,19 +99,22 @@ public class SinglyLinkedList<T> {
 
     public void add(int index, T data) {
         if (index < 0 || index > size) {
-            throw new IllegalArgumentException("некорректное значение index");
-        } else {
-            ListItem<T> p = getElement(index - 1);
-            ListItem<T> node = new ListItem<>(data);
-            if (p == null) {
-                head = node;
-                node.setNext(null);
-            } else {
-                node.setNext(p.getNext());
-                p.setNext(node);
-            }
-            size++;
+            throw new IndexOutOfBoundsException("некорректное значение index");
         }
+        if (index == 0) {
+            addFirst(data);
+            return;
+        }
+        ListItem<T> p = getElement(index - 1);
+        ListItem<T> node = new ListItem<>(data);
+        if (p == null) {
+            head = node;
+            node.setNext(null);
+        } else {
+            node.setNext(p.getNext());
+            p.setNext(node);
+        }
+        size++;
     }
 
     public SinglyLinkedList<T> reverseList() {
@@ -149,7 +141,7 @@ public class SinglyLinkedList<T> {
                 previous = new ListItem<>(p.getData());
                 result.head = previous;
             } else {
-                ListItem<T> addedItemNext = new ListItem<T>(p.getData());
+                ListItem<T> addedItemNext = new ListItem<>(p.getData());
                 previous.setNext(addedItemNext);
                 previous = previous.getNext();
             }
@@ -163,7 +155,11 @@ public class SinglyLinkedList<T> {
         StringBuilder sb = new StringBuilder("[");
         ListItem<T> p = head;
         for (int i = 0; i < size; i++) {
-            sb.append(p.getData().toString());
+            if (p.getData() == null) {
+                sb.append("null");
+            } else {
+                sb.append(p.getData().toString());
+            }
             if (i < size - 1) {
                 sb.append(", ");
             }
