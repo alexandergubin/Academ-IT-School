@@ -6,7 +6,7 @@ public class MyArrayList<T> implements List<T> {
     private Object[] elements;
     private int size;
     private int capacity = 10;
-
+    private int modCount = 0;
 
     public MyArrayList() {
         elements = new Object[capacity];
@@ -22,7 +22,10 @@ public class MyArrayList<T> implements List<T> {
         size = 0;
     }
 
-    private void resizeArray(int newSize) {
+    private void enlargeArray(int newSize) {
+        if (newSize < elements.length) {
+            throw new IllegalArgumentException("некорректная длинна массива при увеличении");
+        }
         Object[] newArray = new Object[newSize];
         System.arraycopy(elements, 0, newArray, 0, size);
         elements = newArray;
@@ -50,18 +53,23 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return listIterator();
+        return new Itr();
     }
 
     @Override
     public Object[] toArray() {
         Object[] result = new Object[size];
-        System.arraycopy(elements, 0, result, 0, size);
+        if (size > 0) {
+            System.arraycopy(elements, 0, result, 0, size);
+        }
         return result;
     }
 
     @Override
     public <T1> T1[] toArray(T1[] a) {
+        if (a == null) {
+            throw new NullPointerException("массив не определен");
+        }
         if (a.length < size) {
             //noinspection unchecked
             return (T1[]) Arrays.copyOf(elements, size, a.getClass());
@@ -75,19 +83,21 @@ public class MyArrayList<T> implements List<T> {
     @Override
     public boolean add(T element) {
         if (elements.length == size) {
-            resizeArray(elements.length + 1);
+            enlargeArray(elements.length * 3 / 2 + 1);
         }
         elements[size] = element;
         size++;
+        modCount++;
         return true;
     }
 
     @Override
     public boolean remove(Object element) {
         for (int i = 0; i < size; i++) {
-            if (elements[i].equals(element)) {
+            if (Objects.equals(elements[i], element)) {
                 System.arraycopy(elements, i + 1, elements, i, size - i);
                 size--;
+                modCount++;
                 return true;
             }
         }
@@ -113,6 +123,7 @@ public class MyArrayList<T> implements List<T> {
             for (T elem : c) {
                 this.add(elem);
             }
+            modCount++;
             return true;
         }
         return false;
@@ -127,7 +138,7 @@ public class MyArrayList<T> implements List<T> {
             return false;
         }
         if ((elements.length - size) < addedLength) {
-            resizeArray(size + addedLength);
+            enlargeArray(size + addedLength);
         }
 
         int numMove = size - index;
@@ -137,6 +148,7 @@ public class MyArrayList<T> implements List<T> {
         //noinspection SuspiciousSystemArraycopy
         System.arraycopy(addedArray, 0, elements, index, addedLength);
         size += addedLength;
+        modCount++;
         return true;
     }
 
@@ -152,6 +164,7 @@ public class MyArrayList<T> implements List<T> {
                 hasDeletion = true;
             }
         }
+        modCount++;
         return hasDeletion;
     }
 
@@ -165,6 +178,9 @@ public class MyArrayList<T> implements List<T> {
                 hasDeletion = true;
             }
         }
+        if (hasDeletion){
+            modCount++;
+        }
         return hasDeletion;
     }
 
@@ -173,6 +189,7 @@ public class MyArrayList<T> implements List<T> {
         for (int i = 0; i < size; i++) {
             elements[i] = null;
         }
+        modCount++;
     }
 
     @Override
@@ -194,11 +211,12 @@ public class MyArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException("некорректный index, выход за границы списка");
         }
         if (size == elements.length) {
-            resizeArray(elements.length + 1);
+            enlargeArray(elements.length * 3 / 2 + 1);
         }
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = element;
         size++;
+        modCount++;
     }
 
     @Override
@@ -215,58 +233,163 @@ public class MyArrayList<T> implements List<T> {
         }
         System.arraycopy(elements, index + 1, elements, index, size - index);
         size--;
+        modCount++;
         return elem;
     }
 
     @Override
     public int indexOf(Object o) {
-        if (o == null) {
             for (int i = 0; i < size; i++) {
-                if (elements[i] == null) {
+                if (Objects.equals(elements[i],o)) {
                     return i;
                 }
             }
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (elements[i].equals(o)) {
-                    return i;
-                }
-            }
-        }
         return -1;
     }
 
     @Override
     public int lastIndexOf(Object o) {
-        if (o == null) {
             for (int i = size - 1; i >= 0; i--) {
-                if (elements[i] == null) {
+                if (Objects.equals(elements[i],o)) {
                     return i;
                 }
             }
-        } else {
-            for (int i = size - 1; i >= 0; i--) {
-                if (elements[i].equals(o)) {
-                    return i;
-                }
-            }
-        }
         return -1;
     }
 
     @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < size; i++) {
+            if (elements[i]==null){
+                sb.append("null");
+            }
+            else {
+                sb.append(elements[i].toString());
+            }
+            if (i < size - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    @Override
     public ListIterator<T> listIterator() {
-        return null;
+        return new ListItr(0);
     }
 
     @Override
     public ListIterator<T> listIterator(int index) {
-        return null;
+        return new ListItr(index);
+    }
+
+
+    private class Itr implements Iterator<T> {
+        int cursor;
+        int lastRet = -1;
+        int expectedModCount = modCount; //запоминаем число модификаций
+
+        private Itr() {
+        }
+
+        public boolean hasNext() {
+            return cursor != size;
+        }
+
+        @SuppressWarnings("unchecked")
+        public T next() {
+            checkForComodification();
+            if (cursor >= size) {
+                throw new NoSuchElementException("коллеция закончилась");
+            }
+            Object[] elements = MyArrayList.this.elements;
+            lastRet = cursor;
+            cursor++;
+            return (T) elements[lastRet];
+        }
+
+        public void remove() {
+            if (lastRet < 0) {
+                throw new IllegalStateException();
+            }
+            checkForComodification();
+
+            MyArrayList.this.remove(lastRet);
+            cursor = lastRet;
+            lastRet = -1;
+            expectedModCount = modCount;
+        }
+
+        final void checkForComodification() {
+            if (modCount != expectedModCount) {
+                throw new ConcurrentModificationException();
+            }
+        }
+    }
+
+    private class ListItr extends Itr implements ListIterator<T> {
+
+        ListItr(int index) {
+            super();
+            cursor = index;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return (cursor > 0 && cursor <= size);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public T previous() {
+            checkForComodification();
+            if (lastRet < 1) {
+                throw new NoSuchElementException("не возможно получить предыдущий элемент у первого");
+            }
+            lastRet--;
+            cursor--;
+            return (T) elements[lastRet];
+        }
+
+        @Override
+        public int nextIndex() {
+            return cursor;
+        }
+
+        @Override
+        public int previousIndex() {
+            return cursor - 1;
+        }
+
+        @Override
+        public void set(T t) {
+            checkForComodification();
+            MyArrayList.this.set(lastRet, t);
+        }
+
+        @Override
+        public void add(T t) {
+            checkForComodification();
+            MyArrayList.this.add(cursor, t);
+            cursor++;
+            lastRet = -1;
+            expectedModCount = modCount;
+        }
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<T> subList(int fromIndex, int toIndex) {
-        return null;
+        if (fromIndex < 0 || toIndex > elements.length) {
+            throw new ArrayIndexOutOfBoundsException("индекс выходит за границы массива");
+        }
+        List<T> result = new ArrayList<>(toIndex - fromIndex);
+        for (int i = fromIndex; i < toIndex; i++) {
+            result.add((T) elements[i]);
+        }
+        return result;
     }
 
 }
