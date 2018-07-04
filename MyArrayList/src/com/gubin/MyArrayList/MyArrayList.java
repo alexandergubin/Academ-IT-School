@@ -7,7 +7,7 @@ public class MyArrayList<T> implements List<T> {
     private int size;
     private int capacity = 10;
     private int modCount = 0;
-
+// myarraylist
     public MyArrayList() {
         // noinspection unchecked
         elements = (T[]) new Object[capacity];
