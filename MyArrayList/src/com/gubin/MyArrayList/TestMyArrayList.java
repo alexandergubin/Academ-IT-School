@@ -14,11 +14,6 @@ class TestMyArrayList {
         arrayList.add(0, "toyota");
         System.out.println(arrayList.toString());
 
-       /* Iterator<String> iterator = arrayList.iterator();
-        while(iterator.hasNext()){
-            System.out.println(iterator.next());
-        }*/
-
         ListIterator<String> listIterator = arrayList.listIterator();
         System.out.println(listIterator.next());
         System.out.println(listIterator.next());

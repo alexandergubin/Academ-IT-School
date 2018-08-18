@@ -68,6 +68,9 @@ public class MyArrayList<T> implements List<T> {
         }
         //noinspection SuspiciousSystemArraycopy
         System.arraycopy(elements, 0, a, 0, size);
+
+        if (a.length > size)
+            a[size] = null;
         return a;
     }
 
