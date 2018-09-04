@@ -2,23 +2,23 @@ package com.gubin.MyArrayList;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class MyArrayList<T> implements List<T> {
     private T[] elements;
     private int size;
-    private int capacity = 10;
     private int modCount = 0;
 
     public MyArrayList() {
         // noinspection unchecked
-        elements = (T[]) new Object[capacity];
+        elements = (T[]) new Object[10];
         size = 0;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public MyArrayList(int capacity) {
         if (capacity < 0) {
             throw new IllegalArgumentException("размер MyArrayList не может быть отрицaтельным");
         }
-        this.capacity = capacity;
         // noinspection unchecked
         elements = (T[]) new Object[capacity];
         size = 0;
@@ -53,11 +53,7 @@ public class MyArrayList<T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        Object[] result = new Object[]{};
-        if (size > 0) {
-            result = Arrays.copyOf(elements, size);
-        }
-        return result;
+        return Arrays.copyOf(elements, size);
     }
 
     @Override
@@ -69,8 +65,9 @@ public class MyArrayList<T> implements List<T> {
         //noinspection SuspiciousSystemArraycopy
         System.arraycopy(elements, 0, a, 0, size);
 
-        if (a.length > size)
+        if (a.length > size) {
             a[size] = null;
+        }
         return a;
     }
 
@@ -173,7 +170,6 @@ public class MyArrayList<T> implements List<T> {
         for (int i = size - 1; i >= 0; i--) {
             if (!c.contains(elements[i])) {
                 remove(i);
-                i--;
                 hasDeletion = true;
             }
         }
@@ -197,7 +193,6 @@ public class MyArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("некорректный index, выход за границы списка");
         }
-        //noinspection unchecked
         return elements[index];
     }
 
@@ -206,9 +201,9 @@ public class MyArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("некорректный index, выход за границы списка");
         }
+        T result = elements[index];
         elements[index] = element;
-        //noinspection unchecked
-        return elements[index];
+        return result;
     }
 
     @Override
@@ -230,7 +225,6 @@ public class MyArrayList<T> implements List<T> {
         if (index >= size || index < 0) {
             throw new ArrayIndexOutOfBoundsException("некорректный index, выход за границы списка");
         }
-        //noinspection unchecked
         T elem = elements[index];
         if (index == size - 1) {
             elements[index] = null;
@@ -394,9 +388,7 @@ public class MyArrayList<T> implements List<T> {
             throw new ArrayIndexOutOfBoundsException("индекс выходит за границы массива");
         }
         List<T> result = new ArrayList<>(toIndex - fromIndex);
-        for (int i = fromIndex; i < toIndex; i++) {
-            result.add(elements[i]);
-        }
+        result.addAll(Arrays.asList(elements).subList(fromIndex, toIndex));
         return result;
     }
 
